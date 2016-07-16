@@ -1,4 +1,6 @@
+import os
 import random
+import sys
 
 def open_word_dict():
     words = []
@@ -10,13 +12,13 @@ def open_word_dict():
 
 def difficulty_level():
     while True:
-        level = input("Do you want to play [E]asy mode, [M]edium mode, or [H]ard mode? ")
+        level = input("Do you want to play [E]asy mode, [n]ormal mode, or [H]ard mode? ")
         if not level:
             break
         elif level.lower() == "e":
             return 'e'
-        elif level.lower() == "m":
-            return 'm'
+        elif level.lower() == "n":
+            return 'n'
         elif level.lower() == "h":
             return 'h'
         else:
@@ -41,7 +43,7 @@ def random_word(word_list):
     if 'e':
         easy_word_list = easy_words(word_list)
         return easy_word_list[random.randrange(len(easy_word_list))]
-    elif 'm':
+    elif 'n':
         medium_word_list = medium_words(word_list)
         return medium_word_list[random.randrange(len(medium_word_list))]
     else:
@@ -50,6 +52,7 @@ def random_word(word_list):
 
 
 def display_word(word, guesses):
+    clear_screen()
     board = []
     for letter in word:
         if letter in guesses:
@@ -61,23 +64,39 @@ def display_word(word, guesses):
 
 
 def ask_for_letter(word):
+    clear_screen()
     good_guesses = []
     bad_guesses = []
     tries_left = 8
-    while tries_left > 0:
+    while tries_left > 0 :
+        print('*' * 30)
+        print("\nTries Left: {}".format(tries_left))
+        print("Letters not in my word: {}".format(', '.join(bad_guesses)))
         letter_guessed = input("What letter would you like to guess?  ").lower()
         if not letter_guessed.isalpha():
             print("That is not a valid choice.")
+            continue
         elif len(letter_guessed) > 1:
             print("Only one letter at a time. Thank you!")
+            continue
         elif letter_guessed in good_guesses or letter_guessed in bad_guesses:
             print("You alredy guessed that letter! Try agian.")
+            continue
         elif letter_guessed in word:
             good_guesses.append(letter_guessed)
-            return letter_guessed
+            print(good_guesses)
         else:
+            print("That letter is not in my word.")
             bad_guesses.append(letter_guessed)
             tries_left -= 1
+
+        display_word(word, good_guesses)
+        if is_word_complete(word, good_guesses):
+            print("YOU WIN! You guessed my word!")
+            play_again()
+    if len(bad_guesses) == 8:
+        print("I WIN! You did not guess my word. It was {}.".format(word))
+        play_again()
 
 
 def is_word_complete(word, guesses):
@@ -93,23 +112,40 @@ def is_word_complete(word, guesses):
         return False
 
 
+def play_again():
+    play_again = input("Do you want to play again? Y/n ").lower()
+    if play_again == 'y':
+        main()
+    else:
+        print("Thanks for playing!")
+        sys.exit()
+
+
+def game_directions():
+    print("\nWelcome to the Mystery Word Game.")
+    print("I will pick a random word that you will have to guess.")
+    print("You may only guess one letter at a time, and your guess must be a letter.")
+    print("If you guess every letter in the word with less than 8 mistakes, you win!\n")
+    print("Easy mode includes words between 4 and 6 letters long.")
+    print("Normal mode includes words between 6 and 8 letters long.")
+    print("Hard mode includes words that are 8 letters or longer.\n")
+
+
+def clear_screen():
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
+
+
 def main():
-    random_word(open_word_dict)
-    """
-    Runs when the program is called from the command-line.
-
-    1. Prompts the user for a difficulty level
-    2. Sets up the game based upon the difficulty level
-    3. Performs the game loop, consisting of:
-       a. Printing the word in progress, using _ for unguessed letters
-       b. Printing the number of guesses remaining
-       c. Printing the letters that have been guessed so far
-       d. Prompting the user for a letter to guess
-    4. Finishing the game and displaying whether the user has won or lost
-    5. Giving the user the option to play again
-    """
+    clear_screen()
+    game_directions()
+    answer = random_word(open_word_dict())
+    print("My word has {} letters in it. Good luck!".format(len(answer)))
+    ask_for_letter(answer)
 
 
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main()
