@@ -10,22 +10,6 @@ def open_word_dict():
     return words
 
 
-def difficulty_level():
-    while True:
-        level = input("Do you want to play [E]asy mode, [n]ormal mode, or [H]ard mode? ")
-        if not level:
-            break
-        elif level.lower() == "e":
-            return 'e'
-        elif level.lower() == "n":
-            return 'n'
-        elif level.lower() == "h":
-            return 'h'
-        else:
-            print("You did not make a valid choice.")
-            continue
-
-
 def easy_words(word_list):
     return [word for word in word_list if len(word) >= 4 and len(word) <= 6]
 
@@ -39,21 +23,27 @@ def hard_words(word_list):
 
 
 def random_word(word_list):
-    difficulty_level()
-    if 'e':
-        easy_word_list = easy_words(word_list)
-        return easy_word_list[random.randrange(len(easy_word_list))]
-    elif 'n':
-        medium_word_list = medium_words(word_list)
-        return medium_word_list[random.randrange(len(medium_word_list))]
-    else:
-        hard_word_list = hard_words(word_list)
-        return hard_word_list[random.randrange(len(hard_word_list))]
+    clear_screen()
+    while True:
+        level = input("Do you want to play [E]asy mode, [N]ormal mode, or [H]ard mode? ")
+        if level.lower() == "e":
+            easy_word_list = easy_words(word_list)
+            return easy_word_list[random.randrange(len(easy_word_list))]
+        elif level.lower() == "n":
+            medium_word_list = medium_words(word_list)
+            return medium_word_list[random.randrange(len(medium_word_list))]
+        elif level.lower() == "h":
+            hard_word_list = hard_words(word_list)
+            return hard_word_list[random.randrange(len(hard_word_list))]
+        else:
+            print("You did not make a valid choice.")
+            continue
 
 
 def display_word(word, guesses):
     clear_screen()
     board = []
+    print('')
     for letter in word:
         if letter in guesses:
             board.append(letter.upper() + ' ')
@@ -64,7 +54,7 @@ def display_word(word, guesses):
 
 
 def ask_for_letter(word):
-    clear_screen()
+    # clear_screen()
     good_guesses = []
     bad_guesses = []
     tries_left = 8
@@ -117,7 +107,7 @@ def play_again():
     if play_again == 'y':
         main()
     else:
-        print("Thanks for playing!")
+        print("\nThanks for playing!\n")
         sys.exit()
 
 
@@ -139,11 +129,16 @@ def clear_screen():
 
 
 def main():
-    clear_screen()
     game_directions()
-    answer = random_word(open_word_dict())
-    print("My word has {} letters in it. Good luck!".format(len(answer)))
-    ask_for_letter(answer)
+    is_playing = input("Press any key to begin playing, or 'Q' to quit.")
+    if is_playing == 'q':
+        sys.exit()
+    else:
+        answer = random_word(open_word_dict())
+        print("My word has {} letters in it. Good luck!\n".format(len(answer)))
+        ask_for_letter(answer)
+        clear_screen()
+
 
 
 
