@@ -52,56 +52,45 @@ def random_word(word_list):
 def display_word(word, guesses):
     board = []
     for letter in word:
-        board.append("_")
-    for idx, letter in enumerate(list(word)):
         if letter in guesses:
-            board[idx] = letter.upper()
-        return ' '.join(board)
-    """
-    Returns a string that including blanks (_) and letters from the given word,
-    filling in letters based upon the list of guesses.
-
-    There should be spaces between each blank _ and each letter. Each letter
-    should be capitalized for display.
-
-    For example, if the word is BOMBARD and the letters guessed are a, b,
-    and d, this function should return 'B _ _ B A _ D'.
-    """
-    # TODO
-    pass
+            board.append(letter.upper() + ' ')
+        else:
+            board.append("_ ")
+    print(''.join(board).strip())
+    return ''.join(board).strip()
 
 
-def ask_for_letter(random_word(open_word_dict())):
-    secret_word = random_word(open_word_dict)
+def ask_for_letter(word):
     good_guesses = []
     bad_guesses = []
     tries_left = 8
-    while tries_left < 0:
+    while tries_left > 0:
         letter_guessed = input("What letter would you like to guess?  ").lower()
         if not letter_guessed.isalpha():
             print("That is not a valid choice.")
-            continue
         elif len(letter_guessed) > 1:
             print("Only one letter at a time. Thank you!")
-            continue
         elif letter_guessed in good_guesses or letter_guessed in bad_guesses:
             print("You alredy guessed that letter! Try agian.")
-            continue
-        elif letter_guessed in secret_word:
+        elif letter_guessed in word:
             good_guesses.append(letter_guessed)
+            return letter_guessed
         else:
             bad_guesses.append(letter_guessed)
-        tries_left -= 1
-        return letter_guessed
+            tries_left -= 1
 
 
 def is_word_complete(word, guesses):
-    """
-    Returns True if the list of guesses covers every letter in the word,
-    otherwise returns False.
-    """
-    # TODO
-    pass
+    complete_word = []
+    for letter in word:
+        if letter in guesses:
+            complete_word.append(letter)
+    complete_word = sorted(complete_word)
+    word = sorted(list(word))
+    if complete_word == word:
+        return True
+    else:
+        return False
 
 
 def main():
@@ -122,17 +111,5 @@ def main():
 
 
 
-if __name__ == '__main__':
-    main()
-
-# not working
-
-
-
-#not working
-def letter_already_guessed(letter):
-    if letter in guessed_letters:
-        print("You already guessed that letter. Pick another letter.")
-        return False
-    else:
-        return True
+# if __name__ == '__main__':
+#     main()
