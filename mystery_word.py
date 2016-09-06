@@ -2,6 +2,7 @@ import os
 import random
 import sys
 
+
 def open_word_dict():
     words = []
     with open('/usr/share/dict/words', 'r') as f:
@@ -58,7 +59,7 @@ def ask_for_letter(word):
     good_guesses = []
     bad_guesses = []
     tries_left = 8
-    while tries_left > 0 :
+    while tries_left > 0:
         print('*' * 30)
         print("\nTries Left: {}".format(tries_left))
         print("Letters not in my word: {}".format(', '.join(bad_guesses)))
